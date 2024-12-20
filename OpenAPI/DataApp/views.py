@@ -26,21 +26,27 @@ class DummyDataAPIView(APIView):
     ''' Endpoint to perform CRUD operations on Data'''
 
     def get(self, request):
-        name = request.query_params.get('name')
+        record_id = request.query_params.get('record_id')
         expiry_details = get_expiry_details(request)
-        if name:
-            for item in DUMMY_DATA:
-                if item['name'].lower() == name.lower():
-                    filtered_data = item
-
-            #filtered_data = [item for item in DUMMY_DATA if item['name'].lower() == name.lower()]
+        if record_id:
+            print(record_id)
+            filtered_data = [item for item in DUMMY_DATA if item['id'] == int(record_id)]
             return Response({'data':filtered_data,**expiry_details}, status=status.HTTP_200_OK)
-        return Response({'data':DUMMY_DATA,**expiry_details}, status=status.HTTP_200_OK)
+        return Response({'data':DUMMY_DATA,**expiry_details}, status=status.HTTP_200_OK)    
+
 
     def post(self, request):
         new_record = request.data
+        #print(new_record)
+        date = request.data.get('date')
         new_record['id'] = len(DUMMY_DATA) + 1  # Auto-generate an ID
-        DUMMY_DATA.append(new_record)
+        if date:
+            DUMMY_DATA.append(new_record)
+        else:
+            dt = datetime.strptime(new_record["datetime"], "%Y-%m-%dT%H:%M:%S")
+            new_record["date"] = dt.strftime("%d-%B-%Y")  # Format: DD-Month-Year
+            DUMMY_DATA.append(new_record)
+
 
         # task 3.2- send notification for batch job 
         send_notification()

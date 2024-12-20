@@ -61,7 +61,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS= {
-    'TITLE' : 'Open API - Mercedes Benz R & D ',
+    'TITLE' : 'Open API - MBRD Project ',
     'DESCRIPTION' : 'Backend endpoints to access realtime Data streams',
     'VERSION' : '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
