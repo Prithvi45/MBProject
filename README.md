@@ -21,3 +21,6 @@ http://65.2.187.146:8000/docs/#/
 2. Django 5.1
 3. DRF 3.15
 4. Python 3.12
+
+
+### Django project name -> OpenAPI
