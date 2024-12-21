@@ -19,7 +19,7 @@ class DummyDataAPITests(APITestCase):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response.data['data'], list)
-        print("Test case executed ")
+        print("List Test case executed ")
 
     @patch('DataApp.models.DummyData')  
     def test_create_dummy_data(self, MockDummyData):
@@ -49,7 +49,7 @@ class DummyDataAPITests(APITestCase):
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsInstance(response.data, dict) 
-        print("Test case executed")
+        print("Create Test case executed")
 
 
     @patch('DataApp.models.DummyData')
@@ -78,7 +78,7 @@ class DummyDataAPITests(APITestCase):
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response.data, dict)
-        print("Test case executed")
+        print("Update Test case executed")
 
 
     @patch('DataApp.models.DummyData')
@@ -96,37 +96,32 @@ class DummyDataAPITests(APITestCase):
 
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        print("Test case executed")
+        print("Delete Test case executed")
 
 
-
-'''
     @patch('DataApp.models.DummyData')
-    def test_retrieve_dummy_data(self, MockDummyData):
+    def test_retrieve_dummy_data_by_pk(self, MockDummyData):
         # Configure the mock instance
         mock_instance = MockDummyData.return_value
-        mock_instance.id = 1
-        mock_instance.ten_min_std_deviation = '17'
-        mock_instance.ten_min_sample_avg = '24.8'
+        mock_instance.pk = 1
+        mock_instance.ten_min_std_deviation = '15'
         mock_instance.time = '2.5'
         mock_instance.datetime = '2024-12-19T12:34:56'
+        mock_instance.ten_min_sampled_avg = '27.8'
 
-        # Simulate the get method
+        # Mock the get method to return the instance
         MockDummyData.objects.get.return_value = mock_instance
 
         # Perform the API request
-        #base_url = reverse('dummy-data-list')
-        #query_params = {'name': 'Tommy'}
-        #full_url = f"{base_url}?{urlencode(query_params)}"
-        #print(full_url)
-        #url = reverse('dummy-data-list', args=[mock_instance.name])  # Ensure this URL name matches your URL configuration
-        url = reverse('dummy-data-list')
-        #print(url)
-        response = self.client.get(url,{'name': 'John Doe'}, format='json')
-        #print(response)
-        #print(response.data)
+        url = reverse('dummy-data-detail', kwargs={'pk': mock_instance.pk})
+        response = self.client.get(url, format='json')
 
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['data']['name'], 'John Doe')
-'''
+        self.assertIsInstance(response.data, dict)
+        self.assertEqual(response.data.get("10_min_std_deviation"), 8)
+        self.assertEqual(response.data.get("time"), 2.46)
+        self.assertEqual(response.data.get("datetime"), "2024-12-19T12:34:56")
+        self.assertEqual(response.data.get("10_min_sampled_avg"), 24.8)
+        print("Retrieve test case executed") 
+

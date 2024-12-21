@@ -58,6 +58,8 @@ SESSION_COOKIE_AGE = 3600  # duration in seconds, 1 hour for Task 3.3
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S",  # ISO format without timezone or milliseconds
+    'DATETIME_INPUT_FORMATS': ["%Y-%m-%dT%H:%M:%S"],  # Allow inputs in ISO format
 }
 
 SPECTACULAR_SETTINGS= {
@@ -129,7 +131,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -141,3 +143,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

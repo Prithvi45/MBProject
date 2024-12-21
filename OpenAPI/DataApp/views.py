@@ -9,6 +9,10 @@ from datetime import datetime, timedelta
 from .schema import DUMMY_DATA
 from .tasks import send_notification
 from .utils import get_expiry_details
+from .models import DummyData
+from .serializers import DummyDataSerializer
+from drf_spectacular.utils import extend_schema, OpenApiExample
+
 
 
 #Task 3.0 - create new column as Date and convert datetime 
@@ -20,8 +24,13 @@ class DummyDataView(APIView):
 
 
 
+
 #Task 3.1 - Perform CRUD operations 
-class DummyDataAPIView(APIView):
+#DummyDataAPIView
+
+class DummyDataListAPIView(APIView):
+    serializer_class = DummyDataSerializer
+
 
     ''' Endpoint to perform CRUD operations on Data'''
 
@@ -34,7 +43,22 @@ class DummyDataAPIView(APIView):
             return Response({'data':filtered_data,**expiry_details}, status=status.HTTP_200_OK)
         return Response({'data':DUMMY_DATA,**expiry_details}, status=status.HTTP_200_OK)    
 
-
+    @extend_schema(
+        request=DummyDataSerializer,
+        responses=DummyDataSerializer,
+        examples=[
+            OpenApiExample(
+                name="Custom ISO",
+                description="Showing the datetime in ISO format.",
+                value={
+                    "ten_min_std_deviation": "15",
+                    "time": "2.46",
+                    "datetime": "2024-12-19T12:34:56",
+                    "ten_min_sampled_avg": "24.8"
+                },
+            ),
+        ],
+    )
     def post(self, request):
         new_record = request.data
         #print(new_record)
@@ -53,6 +77,32 @@ class DummyDataAPIView(APIView):
 
         return Response(new_record, status=status.HTTP_201_CREATED)
 
+
+class DummyDataDetailAPIView(APIView):
+    serializer_class = DummyDataSerializer
+
+    def get(self, request, pk):
+        record = next((item for item in DUMMY_DATA if item['id'] == pk), None) 
+        if not record:
+            return Response({'error': 'Record not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(record, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request=DummyDataSerializer,
+        responses=DummyDataSerializer,
+        examples=[
+            OpenApiExample(
+                name="Custom ISO",
+                description="Showing the datetime in ISO format.",
+                value={
+                    "ten_min_std_deviation": "15",
+                    "time": "2.46",
+                    "datetime": "2024-12-19T12:34:56",
+                    "ten_min_sampled_avg": "24.8"
+                },
+            ),
+        ],
+    )
     def put(self, request, pk):
         record = next((item for item in DUMMY_DATA if item['id'] == pk), None)
         if not record:
