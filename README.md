@@ -12,3 +12,15 @@
 3.3. Set data and session expiry for responses [Done]\
 3.4. Write test cases for CRUD operations
 
+### Project URL
+http://65.2.187.146:8000/docs/#/
+
+
+### Built on
+1. Ubuntu 24.04
+2. Django 5.1
+3. DRF 3.15
+4. Python 3.12
+
+
+### Django project name -> OpenAPI
